@@ -24,7 +24,7 @@ bot.on("ready", function(){
 });
 
 function Refresh(){
-  http.get('http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=1', (res) => {
+  http.get('http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=1&CreatorID=1', (res) => {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
@@ -48,7 +48,11 @@ function Refresh(){
     res.on('end', () => {
       try {
         const parsedData = JSON.parse(rawData);
-        bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send("Nom d'item: " + parsedData[0].Name));
+        var NewItemEmbed = new Discord.RichEmbed()
+          .setTitle("NEW ITEM!")
+          .setDescription("AssetId: "+ parsedData[0].AssetId + "\nName: " + parsedData[0].Name + "\nDescription: " + parsedData[0].Description)
+          .setImage(parsedData[0].ThumbnailUrl);
+        bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send(NewItemEmbed));
       } catch (e) {
         console.error(e.message);
       }
