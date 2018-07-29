@@ -51,7 +51,7 @@ function Refresh(){
         const parsedData = JSON.parse(rawData);
         var NewItemEmbed = new Discord.RichEmbed()
           .setTitle("Nouvelle item ou item mis a jour!")
-          .setDescription("AssetId: "+ parsedData[0].AssetId + "\nName: " + parsedData[0].Name + "\nDescription: " + parsedData[0].Description + "\n \nPrice: " + parsedData[0].Price + " " + bot.emojis.get("473218488681627648"))
+          .setDescription("AssetId: "+ parsedData[0].AssetId + "\nName: " + parsedData[0].Name + "\nDescription: " + parsedData[0].Description + "\n \nPrice: " + parsedData[0].Price + " " + bot.guilds.get("452811080465383434").emojis.find("name","Robux"))
           .setImage(parsedData[0].ThumbnailUrl)
           .setURL(parsedData[0].AbsoluteUrl);
         bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send(NewItemEmbed));
