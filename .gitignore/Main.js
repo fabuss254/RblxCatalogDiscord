@@ -20,6 +20,7 @@ bot.on("ready", function(){
   console.log("Bot is ready to use!");
   bot.user.setPresence({game:{name: "On "+ bot.guilds.array().length +" servers", url: "https://www.twitch.tv/fabuss255", type: 1}});
   
+  bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send("Bot just restarted!"));
   Refresh()
   bot.setInterval(Refresh, RefreshRate*1000);
 });
