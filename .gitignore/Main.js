@@ -24,7 +24,7 @@ bot.on("ready", function(){
 });
 
 function Refresh(){
-  http.get('http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=1&CreatorID=1', (res) => {
+  http.get('http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=1&Category=2', (res) => {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
