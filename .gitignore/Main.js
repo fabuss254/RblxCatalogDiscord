@@ -48,7 +48,7 @@ function Refresh(){
     res.on('end', () => {
       try {
         const parsedData = JSON.parse(rawData);
-        bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send("Nom d'item: " + parsedData.Name));
+        bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send("Nom d'item: " + parsedData[0].Name));
       } catch (e) {
         console.error(e.message);
       }
