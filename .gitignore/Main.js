@@ -80,6 +80,12 @@ function Refresh(){
   });
 };
 
+bot.on("channelCreate", function(channel){
+  if (channel.name == "roblox-catalog"){
+    channel.send("This channel will be use by this bot to notify users!");
+  };
+});
+
 bot.login(process.env.TOKEN);
 console.log("Login successfully!");
 
