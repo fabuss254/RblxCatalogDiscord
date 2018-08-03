@@ -81,7 +81,7 @@ function Refresh(){
   });
   
   
-  http.get('http://api.roblox.com/users/362029523/friends', (res) => {
+  http.get('https://api.roblox.com/users/164287111', (res) => {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
@@ -104,12 +104,7 @@ function Refresh(){
     res.on('data', (chunk) => { rawData += chunk; });
     res.on('end', () => {
       try {
-        const parsedData = JSON.parse(rawData);
-        
-        var found = parsedData.find(function(v) {
-          return v.Id == 164287111;
-        });
-        
+        const found = JSON.parse(rawData);
         if (found){
           if (PlrStatue && PlrStatue !== found.IsOnline){
             var uh
