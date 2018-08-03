@@ -106,7 +106,7 @@ function Refresh(){
       try {
         const parsedData = JSON.parse(rawData);
         
-        var found = array1.find(function(v) {
+        var found = parsedData.find(function(v) {
           return v.Id == 164287111;
         });
         
