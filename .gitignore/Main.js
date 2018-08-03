@@ -113,10 +113,10 @@ function Refresh(){
         if (found){
           if (PlrStatue && PlrStatue !== found.IsOnline){
             var uh
-            if (found.IsOnline == true){
-              uh = "En ligne"
-            }else{
+            if (found.IsOnline == false){
               uh = "Hors ligne"
+            }else{
+              uh = "En ligne"
             }
             bot.channels.findAll('name', 'plr-statue').map(channel => channel.send("Statue du joueur: " + uh));
             PlrStatue = found.IsOnline;
