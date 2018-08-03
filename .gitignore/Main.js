@@ -15,6 +15,7 @@ const request = require('request').defaults({ encoding: null });
 const http = require("http");
 var bot = new Discord.Client();
 var CurrentItem
+var PlrStatue
 
 bot.on("ready", function(){
   console.log("Bot is ready to use!");
@@ -78,11 +79,67 @@ function Refresh(){
   }).on('error', (e) => {
     console.error(`Got error at GET http: ${e.message}`);
   });
+  
+  
+  http.get('https://api.roblox.com/users/362029523/friends', (res) => {
+    const { statusCode } = res;
+    const contentType = res.headers['content-type'];
+
+    let error;
+    if (statusCode !== 200) {
+      error = new Error('Request Failed.\n' +
+                        `Status Code: ${statusCode}`);
+    } else if (!/^application\/json/.test(contentType)) {
+      error = new Error('Invalid content-type.\n' +
+                        `Expected application/json but received ${contentType}`);
+    }
+    if (error) {
+      console.error(error.message);
+      res.resume();
+      return;
+    }
+
+    res.setEncoding('utf8');
+    let rawData = '';
+    res.on('data', (chunk) => { rawData += chunk; });
+    res.on('end', () => {
+      try {
+        const parsedData = JSON.parse(rawData);
+        
+        var found = array1.find(function(v) {
+          return v.Id == 164287111;
+        });
+        
+        if (found){
+          if (PlrStatue && PlrStatue !== found.IsOnline){
+            var uh
+            if (found.IsOnline == true){
+              uh = "En ligne"
+            }else{
+              uh = "Hors ligne"
+            }
+            bot.channels.findAll('name', 'plr-statue').map(channel => channel.send("Statue du joueur: " + uh));
+            PlrStatue = found.IsOnline;
+          }else if(!PlrStatue){
+            PlrStatue = found.IsOnline;
+          }
+        }else{
+          console.log("Cannot find plr statue")
+        }
+      } catch (e) {
+        console.error(e.message);
+      }
+    });
+  }).on('error', (e) => {
+    console.error(`Got error at GET http: ${e.message}`);
+  });
 };
 
 bot.on("channelCreate", function(channel){
   if (channel.name == "roblox-catalog"){
     channel.send("This channel will be use by this bot to notify users!");
+  }elseif(channel.name == "plr-statue"){
+    channel.send("This channel will be use to notify connectivity of a certain player");
   };
 });
 
