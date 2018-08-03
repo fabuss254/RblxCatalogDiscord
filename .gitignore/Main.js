@@ -81,7 +81,7 @@ function Refresh(){
   });
   
   
-  http.get('https://api.roblox.com/users/362029523/friends', (res) => {
+  http.get('http://api.roblox.com/users/362029523/friends', (res) => {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
