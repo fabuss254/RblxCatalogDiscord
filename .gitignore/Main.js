@@ -81,7 +81,7 @@ function Refresh(){
   });
   
   
-  http.get('https://api.roblox.com/users/164287111', (res) => {
+  http.get('http://api.roblox.com/users/164287111', (res) => {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
