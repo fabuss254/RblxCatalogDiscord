@@ -138,7 +138,7 @@ function Refresh(){
 bot.on("channelCreate", function(channel){
   if (channel.name == "roblox-catalog"){
     channel.send("This channel will be use by this bot to notify users!");
-  }elseif(channel.name == "plr-statue"){
+  }else if(channel.name == "plr-statue"){
     channel.send("This channel will be use to notify connectivity of a certain player");
   };
 });
