@@ -81,7 +81,7 @@ function Refresh(){
   });
   
   
-  http.get('https://www.roblox.com/presence/user?userid=164287111', (res) => {
+  http.get('http://www.roblox.com/presence/user?userid=164287111', (res) => {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
@@ -106,7 +106,7 @@ function Refresh(){
       try {
         const found = JSON.parse(rawData);
         if (found){
-          if (PlrStatue && PlrStatue !== found.IsOnline){
+          if (PlrStatue && PlrStatue !== found.UserPresenceType){
             var uh
             if (found.UserPresenceType == 0){
               uh = "Hors ligne"
@@ -114,9 +114,9 @@ function Refresh(){
               uh = "En ligne"
             }
             bot.channels.findAll('name', 'plr-statue').map(channel => channel.send("Statue du joueur: " + uh + " | API PAGE: https://www.roblox.com/presence/user?userid=164287111"));
-            PlrStatue = found.IsOnline;
+            PlrStatue = found.UserPresenceType;
           }else if(!PlrStatue){
-            PlrStatue = found.IsOnline;
+            PlrStatue = found.UserPresenceType;
           }
         }else{
           console.log("Cannot find plr statue")
