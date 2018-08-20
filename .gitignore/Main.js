@@ -81,7 +81,7 @@ function Refresh(){
   });
   
   
-  http.get('http://api.roblox.com/users/164287111', (res) => {
+  http.get('https://www.roblox.com/presence/user?userid=164287111', (res) => {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
@@ -108,12 +108,12 @@ function Refresh(){
         if (found){
           if (PlrStatue && PlrStatue !== found.IsOnline){
             var uh
-            if (found.IsOnline == false){
+            if (found.UserPresenceType == 0){
               uh = "Hors ligne"
             }else{
               uh = "En ligne"
             }
-            bot.channels.findAll('name', 'plr-statue').map(channel => channel.send("Statue du joueur: " + uh));
+            bot.channels.findAll('name', 'plr-statue').map(channel => channel.send("Statue du joueur: " + uh + " | API PAGE: https://www.roblox.com/presence/user?userid=164287111"));
             PlrStatue = found.IsOnline;
           }else if(!PlrStatue){
             PlrStatue = found.IsOnline;
