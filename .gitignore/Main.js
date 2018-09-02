@@ -6,7 +6,7 @@ const MaximumPrice = -1; //Is the bot only notify item with x maximum of robux (
 const ShirtAndPants = false; //Is the bot listen to pants and shirt in addition of others limiteds?
 const LiveCounter = true; //Is the bot edit the message with the number of remaining item (only limitedU)
 const LiveCounterTimeout = 30; //When do the bot stop editing the message after x seconds (Need LiveCounter to true)
-const RefreshRate = 10; //How much time to wait before getting items
+const RefreshRate = 3; //How much time to wait before getting items
 
 // Main script
 
