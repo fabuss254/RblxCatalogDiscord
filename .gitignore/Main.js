@@ -11,7 +11,7 @@ var prefix = "n!"
 
 bot.on("ready", function(){
   console.log("Bot is ready to use!");
-  bot.user.setPresence({game:{name: "On "+ bot.guilds.array().length +" servers", url: "https://www.twitch.tv/fabuss255", type: 1}});
+  bot.user.setPresence({game:{name: "Notifie "+ bot.guilds.array().length +" serveurs", url: "https://www.twitch.tv/fabuss255", type: 1}});
   
   log("Bot just restarted!");
   Refresh()
@@ -75,7 +75,7 @@ function Refresh(){
 function AddItem(Table){
   log("Notified new item " + Table.AssetId)
   var NewItemEmbed
-  if (Table.CreatedDate.substring(6, Table.CreatedDate.length - 2) < (new Date).getTime() + 10*60){
+  if (Table.CreatedDate.substring(6, Table.CreatedDate.length - 2) < (new Date).getTime() + 10*60*1000){
     log("notification not send because updated item")
   }else if(Table.IsLimited){
     if ( Table.IsLimitedUnique){
