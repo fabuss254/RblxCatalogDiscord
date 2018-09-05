@@ -1,12 +1,11 @@
 // Main script
 
+const url = "http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=5&Category=2"
 const Discord = require("discord.js");
-const request = require('request').defaults({ encoding: null });
 const http = require("http");
 const RefreshRate = 3;
 var bot = new Discord.Client();
-var CurrentItem
-var PlrStatue
+var CurrentItem = []
 var prefix = "n!"
 
 bot.on("ready", function(){
@@ -26,11 +25,13 @@ bot.on("message", function(message){
         
       case "say":
             if (message.author.id === "178131193768706048"){
-                message.channel.send();
                 bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send(message.content.substring(6,message.content.length)));
                 message.delete(100);
             }
             break;
+      case "invite":
+        message.channel.send("**Invite du bot**\nhttps://discordapp.com/oauth2/authorize?client_id=473172467716849674&scope=bot&permissions=101440");
+        break;
   };
 });
   
@@ -39,51 +40,28 @@ function log(message){
 }
 
 function Refresh(){
-  http.get("http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=1&Category=2&ie="+(new Date()).getTime(), (res) => {
-    const { statusCode } = res;
-    const contentType = res.headers['content-type'];
-
-    let error;
-    if (statusCode !== 200) {
-      error = new Error('Request Failed.\n' +
-                        `Status Code: ${statusCode}`);
-    } else if (!/^application\/json/.test(contentType)) {
-      error = new Error('Invalid content-type.\n' +
-                        `Expected application/json but received ${contentType}`);
-    }
-    if (error) {
-      console.error(error.message);
-      res.resume();
-      return;
-    }
+  http.get( url + "&ie="+(new Date()).getTime(), (res) => {
 
     res.setEncoding('utf8');
     let rawData = '';
     res.on('data', (chunk) => { rawData += chunk; });
     res.on('end', () => {
       try {
-        const parsedData = JSON.parse(rawData);
-        if (CurrentItem && CurrentItem !== parsedData[0].AssetId){
-          var NewItemEmbed
-          if (parsedData[0].Remaining && parsedData[0].Remaining !== 0){
-            NewItemEmbed = new Discord.RichEmbed()
-            .setTitle("Updated item!")
-            .setDescription("AssetId: "+ parsedData[0].AssetId + "\nName: " + parsedData[0].Name + "\nDescription: " + parsedData[0].Description + "\n \nPrice: " + parsedData[0].Price + " " + bot.guilds.get("452811080465383434").emojis.find("name","Robux") + "\nRemaining: " + parsedData[0].Remaining)
-            .setImage(parsedData[0].ThumbnailUrl)
-            .setURL(parsedData[0].AbsoluteUrl);
-          }else{
-            NewItemEmbed = new Discord.RichEmbed()
-            .setTitle("Updated item!")
-            .setDescription("AssetId: "+ parsedData[0].AssetId + "\nName: " + parsedData[0].Name + "\nDescription: " + parsedData[0].Description + "\n \nPrice: " + parsedData[0].Price + " " + bot.guilds.get("452811080465383434").emojis.find("name","Robux"))
-            .setImage(parsedData[0].ThumbnailUrl)
-            .setURL(parsedData[0].AbsoluteUrl);
-          }
-
-          bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send(NewItemEmbed));
-          CurrentItem = parsedData[0].AssetId;
-        }else if(!CurrentItem){
-          CurrentItem = parsedData[0].AssetId;
-        }
+        const Data = JSON.parse(rawData);
+        if (CurrentItem){
+          Data.forEach(function(v,i){
+            if (CurrentItem[i] !== v.AssetId && (i !== 5 && CurrentItem[i+1] !== v.AssetId)){
+              AddItem(v)
+              CurrentItem[i] = v.AssetId;
+            }
+        });
+        }else{
+          console.log("Making current item data")
+          Data.forEach(function(v,i){
+            CurrentItem[i] = v.AssetId;
+          });
+      }
+        
       } catch (e) {
         console.error(e.message);
       }
@@ -92,6 +70,30 @@ function Refresh(){
     console.error(`Got error at GET http: ${e.message}`);
   });
 };
+
+function AddItem(Table){
+  log("Notified new item " + Table.AssetId)
+  var NewItemEmbed
+  if (Table.CreatedDate.substring(6, Table.CreatedDate.length - 2) < (new Date).getTime() + 10*60){
+    log("notification not send because updated item")
+  }else if(Table.IsLimited){
+    if ( Table.IsLimitedUnique){
+      NewItemEmbed = new Discord.RichEmbed()
+        .setTitle("New limited U!")
+        .setDescription("AssetId: "+ Table.AssetId + "\nName: " + Table.Name + "\nDescription: " + Table.Description + "\n \nPrice: " + Table.Price + " " + bot.guilds.get("476389923574775821").emojis.find("name","Robux") + "\nRemaining: " + Table.Remaining)
+        .setImage(Table.ThumbnailUrl)
+        .setURL(Table.AbsoluteUrl);
+    }else{
+    NewItemEmbed = new Discord.RichEmbed()
+        .setTitle("New limited!")
+        .setDescription("AssetId: "+ Table.AssetId + "\nName: " + Table.Name + "\nDescription: " + Table.Description + "\n \nPrice: " + Table.Price + " " + bot.guilds.get("476389923574775821").emojis.find("name","Robux"))
+        .setImage(Table.ThumbnailUrl)
+        .setURL(Table.AbsoluteUrl);
+    }
+  }
+
+  bot.channels.findAll('name', 'roblox-catalog-test').map(channel => channel.send(NewItemEmbed));
+}
 
 bot.on("channelCreate", function(channel){
   if (channel.name == "roblox-catalog"){
