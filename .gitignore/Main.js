@@ -1,13 +1,3 @@
-// Some settings (TODO)
-
-const OnlyLimited = false; //Is the bot only notify when there is a new limited?
-const MinimumPrice = -1; //Is the bot only notify item with x minimum of robux (-1 to disable)
-const MaximumPrice = -1; //Is the bot only notify item with x maximum of robux (-1 to disable)
-const ShirtAndPants = false; //Is the bot listen to pants and shirt in addition of others limiteds?
-const LiveCounter = true; //Is the bot edit the message with the number of remaining item (only limitedU)
-const LiveCounterTimeout = 30; //When do the bot stop editing the message after x seconds (Need LiveCounter to true)
-const RefreshRate = 3; //How much time to wait before getting items
-
 // Main script
 
 const Discord = require("discord.js");
@@ -16,18 +6,39 @@ const http = require("http");
 var bot = new Discord.Client();
 var CurrentItem
 var PlrStatue
+var prefix = "n!"
 
 bot.on("ready", function(){
   console.log("Bot is ready to use!");
   bot.user.setPresence({game:{name: "On "+ bot.guilds.array().length +" servers", url: "https://www.twitch.tv/fabuss255", type: 1}});
   
-  bot.channels.get("473223607900700676").send("Bot just restarted!");
+  log("Bot just restarted!");
   Refresh()
   bot.setInterval(Refresh, RefreshRate*1000);
 });
 
+bot.on("message", function(message){
+  if (message.author.equals(bot.user)) return;
+  var args = message.content.substring(prefix.length).split (" ");
+  if (!message.content.startsWith(prefix)) return;
+  switch (args[0].toLowerCase()) {
+        
+      case "say":
+            if (message.author.id === "178131193768706048"){
+                message.channel.send();
+                bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send(message.content.substring(6,message.content.length));
+                message.delete(100);
+            }
+            break;
+  };
+});
+  
+function log(message){
+  bot.channels.get("486939478062006272").send(message);
+}
+
 function Refresh(){
-  http.get('http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=1&Category=2'+ "&ie="+(new Date()).getTime(), (res) => {
+  http.get("http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=1&Category=2&ie="+(new Date()).getTime(), (res) => {
     const { statusCode } = res;
     const contentType = res.headers['content-type'];
 
@@ -79,64 +90,11 @@ function Refresh(){
   }).on('error', (e) => {
     console.error(`Got error at GET http: ${e.message}`);
   });
-  
-  /*
-  
-  http.get('http://www.roblox.com/presence/user?userid=164287111'+="&ie="+(new Date()).getTime();, (res) => {
-    const { statusCode } = res;
-    const contentType = res.headers['content-type'];
-
-    let error;
-    if (statusCode !== 200) {
-      error = new Error('Request Failed.\n' +
-                        `Status Code: ${statusCode}`);
-    } else if (!/^application\/json/.test(contentType)) {
-      error = new Error('Invalid content-type.\n' +
-                        `Expected application/json but received ${contentType}`);
-    }
-    if (error) {
-      console.error(error.message);
-      res.resume();
-      return;
-    }
-
-    res.setEncoding('utf8');
-    let rawData = '';
-    res.on('data', (chunk) => { rawData += chunk; });
-    res.on('end', () => {
-      try {
-        const found = JSON.parse(rawData);
-        if (found){
-          if (PlrStatue && PlrStatue !== found.UserPresenceType){
-            var uh
-            if (found.UserPresenceType == 0){
-              uh = "Hors ligne"
-            }else{
-              uh = "En ligne"
-            }
-            bot.channels.findAll('name', 'plr-statue').map(channel => channel.send("Statue du joueur: " + uh + " | API PAGE: https://www.roblox.com/presence/user?userid=164287111"));
-            PlrStatue = found.UserPresenceType;
-          }else if(!PlrStatue){
-            PlrStatue = found.UserPresenceType;
-          }
-        }else{
-          console.log("Cannot find plr statue")
-        }
-      } catch (e) {
-        console.error(e.message);
-      }
-    });
-  }).on('error', (e) => {
-    console.error(`Got error at GET http: ${e.message}`);
-  });
-  */
 };
 
 bot.on("channelCreate", function(channel){
   if (channel.name == "roblox-catalog"){
     channel.send("This channel will be use by this bot to notify users!");
-  }else if(channel.name == "plr-statue"){
-    channel.send("This channel will be use to notify connectivity of a certain player");
   };
 });
 
