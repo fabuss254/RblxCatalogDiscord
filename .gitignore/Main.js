@@ -26,7 +26,7 @@ bot.on("message", function(message){
       case "say":
             if (message.author.id === "178131193768706048"){
                 message.channel.send();
-                bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send(message.content.substring(6,message.content.length));
+                bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send(message.content.substring(6,message.content.length)));
                 message.delete(100);
             }
             break;
