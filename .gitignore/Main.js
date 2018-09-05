@@ -3,9 +3,10 @@
 const url = "http://search.roblox.com/catalog/json?SortType=3&SortType3&ResultsPerPage=5&Category=2"
 const Discord = require("discord.js");
 const http = require("http");
-const RefreshRate = 3;
+const RefreshRate = 1;
+const Channel = "roblox-catalog"
 var bot = new Discord.Client();
-var CurrentItem = []
+var CurrentItem = [101]
 var prefix = "n!"
 
 bot.on("ready", function(){
@@ -25,7 +26,7 @@ bot.on("message", function(message){
         
       case "say":
             if (message.author.id === "178131193768706048"){
-                bot.channels.findAll('name', 'roblox-catalog').map(channel => channel.send(message.content.substring(6,message.content.length)));
+                bot.channels.findAll('name', Channel).map(channel => channel.send(message.content.substring(6,message.content.length)));
                 message.delete(100);
             }
             break;
@@ -48,7 +49,7 @@ function Refresh(){
     res.on('end', () => {
       try {
         const Data = JSON.parse(rawData);
-        if (CurrentItem){
+        if (CurrentItem[0] !== 101){
           Data.forEach(function(v,i){
             if (CurrentItem[i] !== v.AssetId && (i !== 5 && CurrentItem[i+1] !== v.AssetId)){
               AddItem(v)
@@ -92,7 +93,7 @@ function AddItem(Table){
     }
   }
 
-  bot.channels.findAll('name', 'roblox-catalog-test').map(channel => channel.send(NewItemEmbed));
+  bot.channels.findAll('name', Channel).map(channel => channel.send(NewItemEmbed));
 }
 
 bot.on("channelCreate", function(channel){
