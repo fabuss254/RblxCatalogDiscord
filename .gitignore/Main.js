@@ -3,6 +3,7 @@
 const Discord = require("discord.js");
 const request = require('request').defaults({ encoding: null });
 const http = require("http");
+const RefreshRate = 3;
 var bot = new Discord.Client();
 var CurrentItem
 var PlrStatue
