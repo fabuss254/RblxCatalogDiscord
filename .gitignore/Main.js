@@ -75,7 +75,7 @@ function Refresh(){
 function AddItem(Table){
   log("Notified new item " + Table.AssetId)
   var NewItemEmbed
-  if (Table.CreatedDate.substring(6, Table.CreatedDate.length - 2) < (new Date).getTime() + 10*60*1000){
+  if (Number(Table.CreatedDate.substring(6, Table.CreatedDate.length - 2)) < (new Date).getTime() + 10*60*1000){
     log("notification not send because updated item")
   }else if(Table.IsLimited){
     if ( Table.IsLimitedUnique){
